@@ -1,5 +1,5 @@
-if (app.settings.env === ("production")) {
-    module.exports = db = process.env.MONGO_URI_ONLINE
+if (process.env.NODE_ENV === ("production")) {
+    const db = process.env.MONGO_URI_ONLINE
 } else {
-    module.exports = db = process.env.MONGO_URI_LOCAL
+    const db = process.env.MONGO_URI_LOCAL
 }
