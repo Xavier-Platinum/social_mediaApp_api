@@ -9,6 +9,13 @@ const userSchema = new Schema({
         max: 20,
         unique: true
     },
+    name: {
+        type: String,
+        reguire: true,
+        min: 4,
+        max: 35,
+        unique: true
+    },
     email: {
         type: String,
         require: true,

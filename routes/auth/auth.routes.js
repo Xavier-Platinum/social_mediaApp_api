@@ -1,7 +1,8 @@
 const router = require("express").Router();
 
-router.get("/", (req, res) => {
-    res.json("Hello auth routes");
+router.get("/register", (req, res) => {
+    const {} = req.body;
+    
 })
 
 module.exports =  router;
