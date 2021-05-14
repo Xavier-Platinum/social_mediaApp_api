@@ -28,6 +28,7 @@ module.exports = (app, mongoose, chalk) => {
             console.log(chalk.yellow(`\t\tDatabase connected on ${app.settings.env} successfully`));
             app.listen(PORT, () => {
                 console.log(chalk.blueBright(`\t\tAPI Started at port ${PORT} on ${app.settings.env} mode`));
+                console.log(chalk.rgb(90,225,120)(`\t\t\thttp://localhost:${PORT}`))
             });
         }).catch((err) => {
             console.log(chalk.red(err));

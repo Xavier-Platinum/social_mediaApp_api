@@ -12,4 +12,7 @@ const app = express();
 // middlewares
 require("./middlewares/app.middleware")(app, express);
 
+// routings
+require("./middlewares/routes.middleware")(app);
+
 require("./server/app.server")(app, mongoose, chalk)
