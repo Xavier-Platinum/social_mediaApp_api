@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const isValidUsername = require("../../helpers/regex/regex.helper");
 
 router.get("/register", (req, res) => {
     // Destructuring form request
@@ -12,11 +13,15 @@ router.get("/register", (req, res) => {
         errors.push({msg: "Sorry all fields are required"});
     }
 
+    if(!isValidUsername(name)){
+        
+    } 
+
     // regex
     // const regex = ``
     // RegExp
     // const alid_name = `/\^a-z/\^0-9/`;
-    const valid_name = new RegExp(`/\^[A-Za-z]/\/\w{5, 29}$/`)
+    const valid_name = new RegExp(`/\^[A-Za-z]/\/\w{5, 29}$/`);
 
     // confirming password 
     if(password !== confirmPassword && password.length < 8 && !password.includes(valid_name)) {
