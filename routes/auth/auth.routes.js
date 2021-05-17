@@ -59,16 +59,17 @@ router.post("/register", async(req, res) => {
                     r: "pg", //rating
                     d: "mm" //default
                 })
-                const newUser =  new User({
-                    name,
-                    username,
-                    email,
-                    password,
-                    profileAvatar,
-                    coverAvatar
-                })
-
                 try {
+                    const salt = await bcryt.genSalt(10);
+                    const hashedPassword = await bcrypt.hash(password, salt);
+                    const newUser =  new User({
+                        name,
+                        username,
+                        email,
+                        hashedPassword,
+                        profileAvatar,
+                        coverAvatar
+                    })
                     const user = await newUser.save();
                     res.status(200).json(user)
                 } catch(err) {
