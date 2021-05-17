@@ -60,16 +60,19 @@ router.post("/register", async(req, res) => {
                     d: "mm" //default
                 })
                 try {
+                    // hashing password 
                     const salt = await bcryt.genSalt(10);
                     const hashedPassword = await bcrypt.hash(password, salt);
+                    // new user instance 
                     const newUser =  new User({
                         name,
                         username,
                         email,
-                        hashedPassword,
                         profileAvatar,
-                        coverAvatar
+                        coverAvatar,
+                        hashedPassword,
                     })
+                    // saving user
                     const user = await newUser.save();
                     res.status(200).json(user)
                 } catch(err) {
@@ -77,6 +80,27 @@ router.post("/register", async(req, res) => {
                 }
             }
         })
+    }
+})
+
+/**
+ * @param {*POST} registration route
+* @route {/api/user/register }
+ */
+router.post("/login", async(req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email})
+        !user && res.status(404).json("User not found")
+
+        // password validity
+        const validPassword =  await bcrypt.compare(req.body.password, user.password)
+        !validPassword && res.status(404).json("Wrong Password");
+
+        // after user is valid 
+        res.status(200).json(user);
+        console.log(`User logged in, ${user.email}`);
+    } catch(err) {
+        console.log(err);
     }
 })
 
