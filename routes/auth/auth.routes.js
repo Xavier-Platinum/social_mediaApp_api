@@ -41,11 +41,11 @@ router.post("/register", async(req, res) => {
         res.status(200).json({msg: `${errors, req.body}`})
     } else {
         // validation passed
-        await User.findOne({ username: username })
+        await User.findOne({ email: email })
         .then(async(user) => {
             if(user) {
                 errors.push({msg: `User is already registered`})
-                res.redirect("/api/user/register");
+                res.redirect("/api/auth/register");
                 res.status(400).json({msg: `User is already registered`});
             } else {
                 const profileAvatar = gravatar.url(req.body.email, {
@@ -62,7 +62,7 @@ router.post("/register", async(req, res) => {
                 })
                 try {
                     // hashing password 
-                    const salt = await bcryt.genSalt(10);
+                    const salt = await bcrypt.genSalt(10);
                     const hashedPassword = await bcrypt.hash(password, salt);
                     // new user instance 
                     const newUser =  new User({
@@ -71,13 +71,13 @@ router.post("/register", async(req, res) => {
                         email,
                         profileAvatar,
                         coverAvatar,
-                        hashedPassword,
+                        password: hashedPassword,
                     })
                     // saving user
                     const user = await newUser.save();
                     res.status(200).json(user)
                 } catch(err) {
-                    console.log(err)
+                    res.status(500).json(err);
                 }
             }
         })
@@ -89,7 +89,7 @@ router.post("/register", async(req, res) => {
 * @route {/api/user/login }
  */
 router.post("/login", async(req, res) => {
-    console.log(`${req.originalUrl}`);
+    console.log(`Original URL - ${req.originalUrl}`);
     try {
         const errors = [];
         const user = await User.findOne({ email: req.body.email})
@@ -103,7 +103,7 @@ router.post("/login", async(req, res) => {
 
         // ensuring user is valid
         if(user && validPassword) {
-            res.status(200).json(user);
+            res.status(200).json(`Logged in user ${user}`);
             console.log(`User is valid and logged in`);
         } else {
             res.status(404).json(`Validation process not passed, ${errors}`);
