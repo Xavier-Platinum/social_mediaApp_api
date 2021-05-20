@@ -26,6 +26,18 @@ router.put("/:id", async(req, res) => {
     }
 })
 // delete user 
+router.delete("/:id", async(req, res) => {
+    if(req.body.userId === req.params.id || req.user.isAdmin) {
+        try {
+            const user = User.deleteOne(req.params.id)
+            res.status(200).json("Account Deleted Successfully");
+        }catch(err) {
+            res.status(500).json(err);
+        }
+    } else {
+        res.status(403).json("Permission to delete not granted");
+    }
+})
 // get user 
 // follow a user 
 // unfollow a user
