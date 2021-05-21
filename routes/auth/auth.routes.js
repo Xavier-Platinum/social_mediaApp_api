@@ -61,21 +61,27 @@ router.post("/register", async(req, res) => {
                     d: "mm" //default
                 })
                 try {
+                    const saltRounds = 10;
                     // hashing password 
-                    const salt = await bcrypt.genSalt(10);
-                    const hashedPassword = await bcrypt.hash(password, salt);
-                    // new user instance 
-                    const newUser =  new User({
-                        name,
-                        username,
-                        email,
-                        profileAvatar,
-                        coverAvatar,
-                        password: hashedPassword,
+                    await bcrypt.genSalt(saltRounds, (err, salt) => {
+                        bcrypt.hash(password, salt, (err, hash) => {
+                            // new user instance 
+                            const newUser =  new User({
+                                name,
+                                username,
+                                email,
+                                profileAvatar,
+                                coverAvatar,
+                                password: hash,
+                            })
+                            // saving user
+                            const user = await newUser.save();
+                            res.status(200).json(user);
+                        })
                     })
-                    // saving user
-                    const user = await newUser.save();
-                    res.status(200).json(user)
+                    // const salt = await bcrypt.genSalt(10);
+                    // const hashedPassword = await bcrypt.hash(password, salt);
+                    
                 } catch(err) {
                     res.status(500).json(err);
                 }
