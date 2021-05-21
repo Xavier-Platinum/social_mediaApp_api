@@ -6,6 +6,12 @@
 
 
 ## API Documentation
+`Social_API`
+  * `Auth Routes(login, register)`
+    * `login` - [Required] - login routes. (login)
+    * `register` - [Required] - register route. (register)
+  * `Users Routes(profile_update, follow, unfollow, delete)`
+    * `profile_update` - [required] - users update profile. (update)
 
 
 ## Version Compatabilty
