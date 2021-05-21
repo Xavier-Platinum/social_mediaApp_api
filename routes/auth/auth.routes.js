@@ -98,26 +98,27 @@ router.post("/login", async(req, res) => {
     console.log(`Original URL - ${req.originalUrl}`);
     try {
         const errors = [];
-        const user = await User.findOne({ email: req.body.email})
-        !user && res.status(404).json("User not found")
-        errors.push({msg: `${user.email} not found`});
-
-        // password validity
-        const validPassword =  await bcrypt.compare(req.body.password, user.password)
-        !validPassword && res.status(404).json("Wrong Password");
-        errors.push({msg: `${user.password} not valid`});
-
-        // ensuring user is valid
-        if(user && validPassword) {
-            res.status(200).json(`Logged in user ${user}`);
-            console.log(`User is valid and logged in`);
-        } else {
+        await User.findOne({ email: req.body.email })
+        .then(async(user) => {
+            if(!user) {
+                res.status(404).json("User not found");
+                errors.push({msg: `${user.email} not found`});
+            } else {
+                // password validity
+                await bcrypt.compare(req.body.password, user.password, (err, result) => {
+                    if(!result) {
+                        res.status(404).json("Wrong Password");
+                        errors.push({msg: `${user.email} not found`});
+                    } else {
+                        res.status(200).json(`Logged in user ${user}`);
+                        console.log(`User is valid and logged in`);
+                    }
+                }) 
+            }
+        })
+        .catch((err) => {
             res.status(404).json(`Validation process not passed, ${errors}`);
-        }
-
-        // after user is valid 
-        // res.status(200).json(user);
-        // console.log(`User logged in, ${user.email}`);
+        })
     } catch(err) {
         res.status(500).json(err);
     }
