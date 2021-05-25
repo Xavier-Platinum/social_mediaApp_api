@@ -63,8 +63,8 @@ router.post("/register", async(req, res) => {
                 try {
                     const saltRounds = 10;
                     // hashing password 
-                    await bcrypt.genSalt(saltRounds, (err, salt) => {
-                        bcrypt.hash(password, salt, (err, hash) => {
+                    await bcrypt.genSalt(saltRounds, async(err, salt) => {
+                        bcrypt.hash(password, salt, async(err, hash) => {
                             // new user instance 
                             const newUser =  new User({
                                 name,
@@ -72,7 +72,7 @@ router.post("/register", async(req, res) => {
                                 email,
                                 profileAvatar,
                                 coverAvatar,
-                                password: hash,
+                                password: await hash,
                             })
                             // saving user
                             const user = await newUser.save();
