@@ -4,7 +4,7 @@ const { User } = require("../models/user/User.model");
 
 // updating user 
 router.put("/:id", async(req, res) => {
-    if(req.body.userId === req.params.id || req.user.isAdmin) {
+    if(req.body.userId === req.params.id || req.body.isAdmin) {
         if(req.body.password) {
             try {
                 const salt = await bcrypt.genSalt(10);
@@ -29,7 +29,7 @@ router.put("/:id", async(req, res) => {
 router.delete("/:id", async(req, res) => {
     if(req.body.userId === req.params.id || req.user.isAdmin) {
         try {
-            const user = User.deleteOne(req.params.id)
+            await User.findByIdAndDelete(req.params.id)
             res.status(200).json("Account Deleted Successfully");
         }catch(err) {
             res.status(500).json(err);
@@ -39,6 +39,14 @@ router.delete("/:id", async(req, res) => {
     }
 })
 // get user 
+router.get("/:id", async(req, res) => {
+    try {
+        const user = User.findById(req.params.id);
+        res.status(200).json(user);
+    } catch(err) {
+        res.status(500).json(err);
+    }
+});
 // follow a user 
 // unfollow a user
 
