@@ -40,7 +40,7 @@ router.delete("/:id", async(req, res) => {
         res.status(500).json(err)
     }
 });
-// like post 
+// like post // dislike a post
 router.put("/:id/like", async(req, res) => {
     try {
         const post = await Post.findById(req.params.id);
@@ -48,13 +48,15 @@ router.put("/:id/like", async(req, res) => {
             await post.updateOne({ $push: {likes: req.body.userId} })
             res.status(200).json("Post has been liked");
         } else {
-
+            await post.updateOne({ $pull: {likes: req.body.userId} });
+            res.status(200).json("Post has been disliked");
         }
     } catch (err) {
         res.status(500).json(err);
     }
 });
 // get a post 
+
 // get timeline post
 
 module.exports = router;
