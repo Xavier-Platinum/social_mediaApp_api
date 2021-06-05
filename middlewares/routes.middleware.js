@@ -1,4 +1,4 @@
-const usersRoutes =  require("../routes/users.routes");
+const usersRoutes =  require("../routes/users/users.routes");
 const authRoutes = require("../routes/auth/auth.routes");
 const postsRoutes = require("../routes/posts/posts.routes");
 module.exports = (app) => {
