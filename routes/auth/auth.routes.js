@@ -77,6 +77,7 @@ router.post("/register", async(req, res) => {
                             // saving user
                             const user = await newUser.save();
                             res.status(200).json(user);
+                            console.log(user);
                         })
                     })
                     // const salt = await bcrypt.genSalt(10);
